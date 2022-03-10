@@ -97,7 +97,9 @@
               variable.unit = document.getElementById("VariableUnitId").value;
               variable.qualityCode = document.getElementById("VariableQualityCodeId").value;
               variable.dataType = document.getElementById("VariableDataTypeId").value;
-              variable.length = parseInt(document.getElementById("VariableLengthId").value);
+              if((document.getElementById("VariableDataTypeId").value == "STRING" || document.getElementById("VariableDataTypeId").value == "BIG_STRING")) {
+                variable.length = parseInt(document.getElementById("VariableLengthId").value);
+              }
               variable.searchable = "true";
               var variables = [variable];
               aspectType.variables = variables;
