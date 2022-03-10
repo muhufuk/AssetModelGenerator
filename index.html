@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Checkout example · Bootstrap v5.0</title>
+    <script>
+
+      function downloadObjectAsJson(exportObj, exportName){
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+      }
+      function uuidv4() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+      }
+      // Wait until the window finishes loaded before executing any script
+      window.onload = function() {
+
+        var AspectTypeId = document.getElementById("AspectTypeId");
+        var AspectTypeIdInAssetTypeId = document.getElementById("AspectTypeIdInAssetTypeId");
+
+        var VariableNameId = document.getElementById("VariableNameId");
+        var MappingVariableNameId = document.getElementById("MappingVariableNameId");      
+        
+        var MappingAssetReferenceId = document.getElementById("MappingAssetReferenceId");
+        var AssetReferenceId = document.getElementById("AssetReferenceId");
+
+        var MappingAssetReferenceId = document.getElementById("MappingAssetReferenceId");
+        var AssetReferenceId = document.getElementById("AssetReferenceId");
+
+        var assetmodel = new Object();
+        // Attach handler to the button click event
+        GenerateJsonButton.onclick = function() {
+          if(AspectTypeId.value != AspectTypeIdInAssetTypeId.value)
+          {
+            console.log("AssetType's AspectTypeId should be matched with Id of AssetType")
+            console.log(AspectTypeId.value)
+            console.log(AspectTypeIdInAssetTypeId.value)
+            alert("AssetType's AspectTypeId should be matched with Id of AspectType");
+            return false;
+          }else if(TypeInAssetId.value != AssetTypeId.value)
+          {
+            console.log("AssetTypeId should be matched with typeId in Asset")
+            console.log(VariableNameId.value)
+            console.log(MappingVariableNameId.value)
+            alert("AssetTypeId should be matched with typeId in Asset");
+            return false;
+          }else if(VariableNameId.value != MappingVariableNameId.value)
+          {
+            console.log("VariableName in Mapping should be matched Name of AspectType's Variable")
+            console.log(VariableNameId.value)
+            console.log(MappingVariableNameId.value)
+            alert("VariableName in Mapping should be matched Name of AspectType's Variable");
+            return false;
+          }
+          else if(MappingAspectNameId.value != AspectNameInAssetTypeId.value)
+          {
+            console.log("AspectName in Mapping should be matched Name of Aspect in AssetType")
+            console.log(MappingAspectNameId.value)
+            console.log(AspectNameInAssetTypeId.value)
+            alert("AspectName in Mapping should be matched Name of Aspect in AssetType");
+            return false;
+          }else if(MappingAssetReferenceId.value != AssetReferenceId.value)
+          {
+            console.log("VariableName in Mapping should be matched Name of AspectType's Variable")
+            console.log(MappingAssetReferenceId.value)
+            console.log(AssetReferenceId.value)
+            alert("ReferenceId in Mapping should be matched referenceId of Asset");
+            return false;
+          }
+          else if((document.getElementById("VariableDataTypeId").value == "STRING" || document.getElementById("VariableDataTypeId").value == "BIG_STRING") && document.getElementById("VariableLengthId").value == ''){
+            alert("Length can not be null If data type is STRING or BIG_STRING");
+          } else {
+              assetmodel.id = uuidv4();
+              console.log(assetmodel);
+
+              var aspectType = new Object();
+              aspectType.id = document.getElementById("AspectTypeId").value;
+              aspectType.name = document.getElementById("AspectTypeNameId").value;
+              aspectType.description = document.getElementById("AspectTypeDescriptionId").value;
+              aspectType.category = "static";
+              aspectType.scope = "private";
+              aspectType.referenceId = uuidv4();
+              
+              var variable = new Object();
+              variable.name = document.getElementById("VariableNameId").value;
+              variable.unit = document.getElementById("VariableUnitId").value;
+              variable.unit = document.getElementById("VariableUnitId").value;
+              variable.qualityCode = document.getElementById("VariableQualityCodeId").value;
+              variable.dataType = document.getElementById("VariableDataTypeId").value;
+              variable.length = document.getElementById("VariableLengthId").value;
+              variable.searchable = "true";
+              var variables = [variable];
+              aspectType.variables = variables;
+              var aspectTypes = [aspectType]; 
+
+
+              var assetType = new Object();
+              assetType.id = document.getElementById("AssetTypeId").value;
+              assetType.name = document.getElementById("AssetTypeNameId").value;
+              assetType.parentTypeId = "core.basicasset";
+              assetType.description = document.getElementById("AssetTypeDescriptionId").value;
+              assetType.instantiable = "true";
+              assetType.scope = "private";
+              assetType.referenceId = uuidv4();
+
+              var aspect = new Object();
+              aspect.name = document.getElementById("AspectNameInAssetTypeId").value;
+              aspect.aspectTypeId = document.getElementById("AspectTypeIdInAssetTypeId").value;
+              var aspects = [aspect];
+              assetType.aspects = aspects;
+              var assetTypes = [assetType]
+              
+
+              var asset = new Object();
+              asset.referenceId = document.getElementById("AssetReferenceId").value;
+              asset.parentReferenceId = "root";
+              asset.typeId = document.getElementById("TypeInAssetId").value;
+              asset.name = document.getElementById("AssetNameId").value;
+              asset.description = document.getElementById("AssetDescriptionId").value;
+              var assets = [asset];
+
+              var mapping = new Object();
+              mapping.dataPointId = document.getElementById("DataPointId").value;
+              mapping.assetReferenceId = document.getElementById("MappingAssetReferenceId").value;
+              mapping.aspectName = document.getElementById("MappingAspectNameId").value;
+              mapping.variableName = document.getElementById("MappingVariableNameId").value;
+              mapping.referenceId = uuidv4();
+              var mappings = [mapping];
+
+
+              assetmodel.data = new Object();
+              assetmodel.data.externalId = uuidv4();
+              assetmodel.data.typeModel = new Object();
+
+              assetmodel.data.typeModel.aspectTypes = aspectTypes;
+              assetmodel.data.typeModel.assetTypes = assetTypes;
+
+              assetmodel.data.instanceModel = new Object();
+              assetmodel.data.instanceModel.assets = assets;
+
+              assetmodel.data.mappingModel = new Object();
+              assetmodel.data.mappingModel.mappings = mappings;
+              var fileName = 'assetModel.json';
+
+              downloadObjectAsJson(assetmodel, fileName);
+              const assetModelAsString = JSON.stringify(assetmodel);
+              console.log(assetModelAsString);
+          }     
+        }
+      }
+
+   </script>
+  </head>
+  <body class="bg-light">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>Asset Model Generator</h2>
+      <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+    </div>
+    <table>
+      <tbody>
+      <tr>
+        <tr>
+          <th colspan="4">Definition of AspectType</th>
+        </tr>
+        <tr>
+          <td><label for="AspectTypeIdText" class="form-label">AspectTypeId</label><br/><input type="text" class="form-control" id="AspectTypeId" placeholder="" value="" required></td>
+          <td><label for="AspectTypeNameText" class="form-label">AspectTypeName</label><br/><input type="text" class="form-control" id="AspectTypeNameId" placeholder="" value="" required></td>
+          <td><label for="AspectTypeDescriptionText" class="form-label">AspectTypeDescription</label><br/><input type="text" class="form-control" id="AspectTypeDescriptionId" placeholder="" value="" required></td>
+        </tr>
+      </tr>
+      <tr>
+        <tr>
+          <th colspan="4">Variable of AspectType</th>
+        </tr>
+        <tr>
+          <td><label>Name </label><br/><input type="text" class="form-control" id="VariableNameId" placeholder="" value="" required></td>
+          <td><label>DataType</label><br/> 
+            <select class="form-select" id="VariableDataTypeId" required>
+              <option value="">Choose...</option>
+              <option>BOOLEAN</option>
+              <option>INT</option>
+              <option>LONG</option>
+              <option>DOUBLE</option>
+              <option>STRING</option>
+              <option>BIG_STRING</option>
+              <option>TIMESTAMP</option>         
+            </select>
+          </td>
+          <td><label>Unit </label><br/><input type="text" class="form-control" id="VariableUnitId" placeholder="" value="" required></td>
+          <td><label>Length</label><br/><input type="text" class="form-control" id="VariableLengthId" placeholder="" value="" required></td>
+          <td><label>QualityCode</label><br/> 
+            <select class="form-select" id="VariableQualityCodeId" required>
+              <option value="">Choose...</option>
+              <option>true</option>
+              <option>false</option>         
+            </select>
+          </td>
+        </tr>
+      </tr>
+      <tr>
+        <tr>
+          <th colspan="4">Definition of AssetType</th>
+        </tr>
+        <tr>
+          <td><label for="AssetTypeIdText" class="form-label">AssetTypeId</label><br/><input type="text" class="form-control" id="AssetTypeId" placeholder="" value="" required></td>
+          <td><label for="AssetTypeNameText" class="form-label">AssetTypeName</label><br/><input type="text" class="form-control" id="AssetTypeNameId" placeholder="" value="" required></td>
+          <td><label for="AssetTypeDescriptionText" class="form-label">AssetTypeDescription</label><br/><input type="text" class="form-control" id="AssetTypeDescriptionId" placeholder="" value="" required></td>
+        </tr>
+        <tr>  
+      </tr>
+      <tr>
+        <tr>
+          <th colspan="4">Aspect of AssetType</th>
+        </tr>
+        <tr>
+          <td><label>Name </label><br/><input type="text" class="form-control" id="AspectNameInAssetTypeId" placeholder="" value="" required></td>
+          <td><label>AspectTypeId </label><br/><input type="text" class="form-control" id="AspectTypeIdInAssetTypeId" placeholder="" value="" required></td>
+        </tr>
+      </tr>
+      <tr>
+        <tr>
+          <th colspan="4">Instance Model (Asset Definition)</th>
+        </tr>
+        <tr>
+          <td><label for="ReferenceIdText" class="form-label">ReferenceId</label><br/><input type="text" class="form-control" id="AssetReferenceId" placeholder="" value="" required></td>
+          <td><label for="typeId" class="form-label">TypeId</label><br/><input type="text" class="form-control" id="TypeInAssetId" placeholder="" value="" required></td>
+          <td><label for="Name" class="form-label">Name</label><br/><input type="text" class="form-control" id="AssetNameId" placeholder="" value="" required></td>
+          <td><label for="AssetDescription" class="form-label">AssetTypeDescription</label><br/><input type="text" class="form-control" id="AssetDescriptionId" placeholder="" value="" required></td>
+        </tr>
+      </tr>
+      <tr>
+        <tr>
+          <th colspan="4">Mapping Model Definition</th>
+        </tr>
+        <tr>
+          <td><label for="DataPointIdText" class="form-label">DataPointId</label><br/><input type="text" class="form-control" id="DataPointId" placeholder="" value="" required></td>
+          <td><label for="AssetReferenceIdText" class="form-label">AssetReferenceId</label><br/><input type="text" class="form-control" id="MappingAssetReferenceId" placeholder="" value="" required></td>
+          <td><label for="AspectNameText" class="form-label">AspectName</label><br/><input type="text" class="form-control" id="MappingAspectNameId" placeholder="" value="" required></td>
+          <td><label for="VariableNameText" class="form-label">VariableName</label><br/><input type="text" class="form-control" id="MappingVariableNameId" placeholder="" value="" required></td>
+        </tr>
+      </tr>
+      <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <tr>
+          <td><button id="GenerateJsonButton" class="btn btn-primary btn-xs" type="submit">Generate</button></td>
+        </tr>
+      </tr>
+      </tbody>
+      </table>
+  </main>
+
+  <footer class="my-5 pt-5 text-muted text-center text-small">
+    <p class="mb-1">&copy; 2017–2021 Company Name</p>
+    <ul class="list-inline">
+      <li class="list-inline-item"><a href="#">Privacy</a></li>
+      <li class="list-inline-item"><a href="#">Terms</a></li>
+      <li class="list-inline-item"><a href="#">Support</a></li>
+    </ul>
+  </footer>
+</div>
+
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      <script src="form-validation.js"></script>
+  </body>
+</html>
