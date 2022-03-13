@@ -46,6 +46,10 @@
                 elements[index].value = "";
             }
           }
+          var qualityCode = document.getElementById("VariableQualityCodeId");
+          var dataType = document.getElementById("VariableDataTypeId");
+          qualityCode.value = "";
+          dataType.value = "";
         }
 
         GenerateJsonButton.onclick = function() {
@@ -189,12 +193,12 @@
               <td><label>Name </label><br/><input type="text" class="form-control" id="VariableNameId" placeholder="" value="temperature" required></td>
               <td><label>DataType</label><br/> 
                 <select class="form-select" id="VariableDataTypeId" required>
-                  <option value="STRING">Choose...</option>
+                  <option value="">Choose...</option>
                   <option>BOOLEAN</option>
                   <option>INT</option>
                   <option>LONG</option>
                   <option>DOUBLE</option>
-                  <option>STRING</option>
+                  <option selected="selected">STRING</option>
                   <option>BIG_STRING</option>
                   <option>TIMESTAMP</option>         
                 </select>
@@ -203,8 +207,8 @@
               <td><label>Length</label><br/><input type="text" class="form-control" id="VariableLengthId" placeholder="" value="20" required></td>
               <td><label>QualityCode</label><br/> 
                 <select class="form-select" id="VariableQualityCodeId" required>
-                  <option value="true">Choose...</option>
-                  <option>true</option>
+                  <option value="">Choose...</option>
+                  <option selected="selected">true</option>
                   <option>false</option>         
                 </select>
               </td>
