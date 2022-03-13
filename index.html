@@ -22,7 +22,7 @@
           (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
       }
-      // Wait until the window finishes loaded before executing any script
+
       window.onload = function() {
 
         var AspectTypeId = document.getElementById("AspectTypeId");
@@ -38,42 +38,36 @@
         var AssetReferenceId = document.getElementById("AssetReferenceId");
 
         var assetmodel = new Object();
-        // Attach handler to the button click event
+
+        ClearContentButton.onclick = function() {
+          var elements = document.getElementsByTagName("input");
+          for (var index=0; index < elements.length; index++) {
+            if (elements[index].type == "text") {
+                elements[index].value = "";
+            }
+          }
+        }
+
         GenerateJsonButton.onclick = function() {
           if(AspectTypeId.value != AspectTypeIdInAssetTypeId.value)
           {
-            console.log("AssetType's AspectTypeId should be matched with Id of AssetType")
-            console.log(AspectTypeId.value)
-            console.log(AspectTypeIdInAssetTypeId.value)
             alert("AssetType's AspectTypeId should be matched with Id of AspectType");
             return false;
           }else if(TypeInAssetId.value != AssetTypeId.value)
           {
-            console.log("AssetTypeId should be matched with typeId in Asset")
-            console.log(VariableNameId.value)
-            console.log(MappingVariableNameId.value)
             alert("AssetTypeId should be matched with typeId in Asset");
             return false;
           }else if(VariableNameId.value != MappingVariableNameId.value)
           {
-            console.log("VariableName in Mapping should be matched Name of AspectType's Variable")
-            console.log(VariableNameId.value)
-            console.log(MappingVariableNameId.value)
             alert("VariableName in Mapping should be matched Name of AspectType's Variable");
             return false;
           }
           else if(MappingAspectNameId.value != AspectNameInAssetTypeId.value)
           {
-            console.log("AspectName in Mapping should be matched Name of Aspect in AssetType")
-            console.log(MappingAspectNameId.value)
-            console.log(AspectNameInAssetTypeId.value)
             alert("AspectName in Mapping should be matched Name of Aspect in AssetType");
             return false;
           }else if(MappingAssetReferenceId.value != AssetReferenceId.value)
           {
-            console.log("VariableName in Mapping should be matched Name of AspectType's Variable")
-            console.log(MappingAssetReferenceId.value)
-            console.log(AssetReferenceId.value)
             alert("ReferenceId in Mapping should be matched referenceId of Asset");
             return false;
           }
@@ -81,7 +75,6 @@
             alert("Length can not be null If data type is STRING or BIG_STRING");
           } else {
               assetmodel.id = uuidv4();
-              console.log(assetmodel);
 
               var aspectType = new Object();
               aspectType.id = document.getElementById("AspectTypeId").value;
@@ -97,9 +90,7 @@
               variable.unit = document.getElementById("VariableUnitId").value;
               variable.qualityCode = document.getElementById("VariableQualityCodeId").value;
               variable.dataType = document.getElementById("VariableDataTypeId").value;
-              if((document.getElementById("VariableDataTypeId").value == "STRING" || document.getElementById("VariableDataTypeId").value == "BIG_STRING")) {
-                variable.length = parseInt(document.getElementById("VariableLengthId").value);
-              }
+              variable.length = parseInt(document.getElementById("VariableLengthId").value);
               variable.searchable = "true";
               var variables = [variable];
               aspectType.variables = variables;
@@ -152,7 +143,7 @@
 
               assetmodel.data.mappingModel = new Object();
               assetmodel.data.mappingModel.mappings = mappings;
-              var fileName = 'assetModel';
+              var fileName = 'AssetModel';
 
               downloadObjectAsJson(assetmodel, fileName);
               const assetModelAsString = JSON.stringify(assetmodel);
@@ -169,7 +160,6 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 <div class="container">
   <main>
     <div class="py-5 text-center">
@@ -179,98 +169,118 @@
     <table>
       <tbody>
       <tr>
-        <tr>
-          <th colspan="4">Definition of AspectType</th>
-        </tr>
-        <tr>
-          <td><label for="AspectTypeIdText" class="form-label">AspectTypeId</label><br/><input type="text" class="form-control" id="AspectTypeId" placeholder="" value="" required></td>
-          <td><label for="AspectTypeNameText" class="form-label">AspectTypeName</label><br/><input type="text" class="form-control" id="AspectTypeNameId" placeholder="" value="" required></td>
-          <td><label for="AspectTypeDescriptionText" class="form-label">AspectTypeDescription</label><br/><input type="text" class="form-control" id="AspectTypeDescriptionId" placeholder="" value="" required></td>
-        </tr>
+        <table class="table table-dark">
+          <tbody>
+          <tr>
+            <tr>
+              <th colspan="4">Definition of AspectType</th>
+            </tr>
+            <tr>
+              <td><label for="AspectTypeIdText" class="form-label">Id</label><br/><input type="text" class="form-control" id="AspectTypeId" placeholder="" value="Tenant.WingAspect" required></td>
+              <td><label for="AspectTypeNameText" class="form-label">Name</label><br/><input type="text" class="form-control" id="AspectTypeNameId" placeholder="" value="WingAspectName" required></td>
+              <td><label for="AspectTypeDescriptionText" class="form-label">Description</label><br/><input type="text" class="form-control" id="AspectTypeDescriptionId" placeholder="" value="This is an aspect for Wing" required></td>
+            </tr>
+          </tr>
+          <tr>
+            <tr>
+              <th colspan="4">Variable of AspectType</th>
+            </tr>
+            <tr>
+              <td><label>Name </label><br/><input type="text" class="form-control" id="VariableNameId" placeholder="" value="temperature" required></td>
+              <td><label>DataType</label><br/> 
+                <select class="form-select" id="VariableDataTypeId" required>
+                  <option value="STRING">Choose...</option>
+                  <option>BOOLEAN</option>
+                  <option>INT</option>
+                  <option>LONG</option>
+                  <option>DOUBLE</option>
+                  <option>STRING</option>
+                  <option>BIG_STRING</option>
+                  <option>TIMESTAMP</option>         
+                </select>
+              </td>
+              <td><label>Unit </label><br/><input type="text" class="form-control" id="VariableUnitId" placeholder="" value="C/F" required></td>
+              <td><label>Length</label><br/><input type="text" class="form-control" id="VariableLengthId" placeholder="" value="20" required></td>
+              <td><label>QualityCode</label><br/> 
+                <select class="form-select" id="VariableQualityCodeId" required>
+                  <option value="true">Choose...</option>
+                  <option>true</option>
+                  <option>false</option>         
+                </select>
+              </td>
+            </tr>
+          </tr>
+          </tbody>
+        </table>
       </tr>
       <tr>
-        <tr>
-          <th colspan="4">Variable of AspectType</th>
-        </tr>
-        <tr>
-          <td><label>Name </label><br/><input type="text" class="form-control" id="VariableNameId" placeholder="" value="" required></td>
-          <td><label>DataType</label><br/> 
-            <select class="form-select" id="VariableDataTypeId" required>
-              <option value="">Choose...</option>
-              <option>BOOLEAN</option>
-              <option>INT</option>
-              <option>LONG</option>
-              <option>DOUBLE</option>
-              <option>STRING</option>
-              <option>BIG_STRING</option>
-              <option>TIMESTAMP</option>         
-            </select>
-          </td>
-          <td><label>Unit </label><br/><input type="text" class="form-control" id="VariableUnitId" placeholder="" value="" required></td>
-          <td><label>Length</label><br/><input type="text" class="form-control" id="VariableLengthId" placeholder="" value="" required></td>
-          <td><label>QualityCode</label><br/> 
-            <select class="form-select" id="VariableQualityCodeId" required>
-              <option value="">Choose...</option>
-              <option>true</option>
-              <option>false</option>         
-            </select>
-          </td>
-        </tr>
+        <table class="table table-dark">
+          <tbody>
+            <tr>
+              <tr>
+                <th colspan="4">Definition of AssetType</th>
+              </tr>
+              <tr>
+                <td><label for="AssetTypeIdText" class="form-label">Id</label><br/><input type="text" class="form-control" id="AssetTypeId" placeholder="" value="Tenant.SpaceShip" required></td>
+                <td><label for="AssetTypeNameText" class="form-label">Name</label><br/><input type="text" class="form-control" id="AssetTypeNameId" placeholder="" value="SpaceShipType" required></td>
+                <td><label for="AssetTypeDescriptionText" class="form-label">Description</label><br/><input type="text" class="form-control" id="AssetTypeDescriptionId" placeholder="" value="Hyperspace jump capable space ship" required></td>
+              </tr>
+              <tr>  
+            </tr>
+            <tr>
+              <tr>
+                <th colspan="4">Aspect of AssetType</th>
+              </tr>
+              <tr>
+                <td><label>Id </label><br/><input type="text" class="form-control" id="AspectTypeIdInAssetTypeId" placeholder="" value="Tenant.WingAspect" required></td>
+                <td><label>Name</label><br/><input type="text" class="form-control" id="AspectNameInAssetTypeId" placeholder="" value="WingAspect" required></td>                
+              </tr>
+            </tr>
+          </tbody>
+        </table>
       </tr>
       <tr>
-        <tr>
-          <th colspan="4">Definition of AssetType</th>
-        </tr>
-        <tr>
-          <td><label for="AssetTypeIdText" class="form-label">AssetTypeId</label><br/><input type="text" class="form-control" id="AssetTypeId" placeholder="" value="" required></td>
-          <td><label for="AssetTypeNameText" class="form-label">AssetTypeName</label><br/><input type="text" class="form-control" id="AssetTypeNameId" placeholder="" value="" required></td>
-          <td><label for="AssetTypeDescriptionText" class="form-label">AssetTypeDescription</label><br/><input type="text" class="form-control" id="AssetTypeDescriptionId" placeholder="" value="" required></td>
-        </tr>
-        <tr>  
+        <table class="table table-dark">
+          <tbody>
+            <tr>
+              <tr>
+                <th colspan="4">Instance Model (Asset Definition)</th>
+              </tr>
+              <tr>
+                <td><label for="ReferenceIdText" class="form-label">ReferenceId</label><br/><input type="text" class="form-control" id="AssetReferenceId" placeholder="" value="0242ac120002" required></td>
+                <td><label for="typeId" class="form-label">TypeId</label><br/><input type="text" class="form-control" id="TypeInAssetId" placeholder="" value="Tenant.SpaceShip" required></td>
+                <td><label for="Name" class="form-label">Name</label><br/><input type="text" class="form-control" id="AssetNameId" placeholder="" value="SpaceShip" required></td>
+                <td><label for="AssetDescription" class="form-label">Description</label><br/><input type="text" class="form-control" id="AssetDescriptionId" placeholder="" value="The ship of Han Solo and Chewbacca" required></td>
+              </tr>
+            </tr>
+          </tbody>
+        </table>
       </tr>
       <tr>
-        <tr>
-          <th colspan="4">Aspect of AssetType</th>
-        </tr>
-        <tr>
-          <td><label>Name </label><br/><input type="text" class="form-control" id="AspectNameInAssetTypeId" placeholder="" value="" required></td>
-          <td><label>AspectTypeId </label><br/><input type="text" class="form-control" id="AspectTypeIdInAssetTypeId" placeholder="" value="" required></td>
-        </tr>
+        <table class="table table-dark">
+          <tbody>
+            <tr>
+              <th colspan="4">Mapping Model Definition</th>
+            </tr>
+            <tr>
+              <td><label for="DataPointIdText" class="form-label">DataPointId</label><br/><input type="text" class="form-control" id="DataPointId" placeholder="" value="dp01" required></td>
+              <td><label for="AssetReferenceIdText" class="form-label">AssetReferenceId</label><br/><input type="text" class="form-control" id="MappingAssetReferenceId" placeholder="" value="0242ac120002" required></td>
+              <td><label for="AspectNameText" class="form-label">AspectName</label><br/><input type="text" class="form-control" id="MappingAspectNameId" placeholder="" value="WingAspect" required></td>
+              <td><label for="VariableNameText" class="form-label">VariableName</label><br/><input type="text" class="form-control" id="MappingVariableNameId" placeholder="" value="temperature" required></td>
+            </tr>
+          </tbody>
+        </table>
       </tr>
       <tr>
-        <tr>
-          <th colspan="4">Instance Model (Asset Definition)</th>
-        </tr>
-        <tr>
-          <td><label for="ReferenceIdText" class="form-label">ReferenceId</label><br/><input type="text" class="form-control" id="AssetReferenceId" placeholder="" value="" required></td>
-          <td><label for="typeId" class="form-label">TypeId</label><br/><input type="text" class="form-control" id="TypeInAssetId" placeholder="" value="" required></td>
-          <td><label for="Name" class="form-label">Name</label><br/><input type="text" class="form-control" id="AssetNameId" placeholder="" value="" required></td>
-          <td><label for="AssetDescription" class="form-label">AssetTypeDescription</label><br/><input type="text" class="form-control" id="AssetDescriptionId" placeholder="" value="" required></td>
-        </tr>
-      </tr>
-      <tr>
-        <tr>
-          <th colspan="4">Mapping Model Definition</th>
-        </tr>
-        <tr>
-          <td><label for="DataPointIdText" class="form-label">DataPointId</label><br/><input type="text" class="form-control" id="DataPointId" placeholder="" value="" required></td>
-          <td><label for="AssetReferenceIdText" class="form-label">AssetReferenceId</label><br/><input type="text" class="form-control" id="MappingAssetReferenceId" placeholder="" value="" required></td>
-          <td><label for="AspectNameText" class="form-label">AspectName</label><br/><input type="text" class="form-control" id="MappingAspectNameId" placeholder="" value="" required></td>
-          <td><label for="VariableNameText" class="form-label">VariableName</label><br/><input type="text" class="form-control" id="MappingVariableNameId" placeholder="" value="" required></td>
-        </tr>
-      </tr>
-      <tr>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <tr>
-          <td><button id="GenerateJsonButton" class="btn btn-primary btn-xs" type="submit">Generate</button></td>
-        </tr>
+        <td>
+         <button id="GenerateJsonButton" class="btn btn-primary btn-xs" type="submit">Generate</button>
+        </td>
+        <td>
+          <button id="ClearContentButton" class="btn btn-primary btn-xs" type="submit">Clear</button>
+        </td>
+        <td>
+          <p class="text-danger">If you want to try this template with existing values, Please replace 'Tenant' in Id fields with your actual tenantId in downloaded json file.</p>
+        </td>
       </tr>
       </tbody>
       </table>
@@ -280,10 +290,7 @@
     <p class="mb-1">&copy; 1988–2022 TokatPrensi</p>
   </footer>
 </div>
-
-
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-
-      <script src="form-validation.js"></script>
+    <script src="form-validation.js"></script>
   </body>
 </html>
